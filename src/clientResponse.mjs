@@ -36,13 +36,13 @@ async function userChoice(){
     let userPreference; 
     
     while(true){
-        userPreference = await rl.question("How would you like to proceed ?\n 1. Enter Location Manually.\n 2. Get Location via IP address (Location will be fetched based on ISP).\n 3. Chat with Ai Assistant.\n 4. Exit App. \n Enter Your Choice : ");
+        userPreference = await rl.question("How would you like to proceed ?\n 1. Enter location manually.\n 2. Get location via IP address (Location will be fetched based on ISP).\n 3. Chat with Ai Assistant.\n 4. Exit App. \n Enter your choice : ");
 
         userPreference = parseInt(userPreference);  
         if([1,2,3,4].includes(userPreference)){
             return userPreference;
         }else{
-            console.log("\nUh ho!, Please Select Valid choice.\n");
+            console.log("\nUh ho!, Please select valid choice.\n");
             continue;
         }
     }

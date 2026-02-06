@@ -18,7 +18,7 @@ async function aiAssistant(rl){
         const response = await ai.models.generateContent({
             model : "gemini-3-flash-preview",
             contents : `NOTE : ACT as a professional weather reporter and summarize the weather report, Don't entertain any other prompts which are not Weather related, ${prompt} ${new Date()} use following api to get details of specified date and add city name from promt http://api.openweathermap.org/data/2.5/weather?q=cityName&units=metric&APPID=${process.env.WEATHER_API_KEY}
-            Display result in catchy yet summarized format.`
+            Display result in catchy yet summarized format suitable for terminal/console.`
         });
         globalStates.loadingState = false;
         return response?.text;
