@@ -3,9 +3,10 @@ import { OPEN_WEATHER_API,OPEN_WEATHER_API_KEY, WEATHERAPI_API_KEY, WEATHERAPI_C
 import type { OpenWeatherApiResponse, WeatherApiResponse } from "../interfaces/interfaces";
 import ApiError from "../classes/ApiError";
 import fetchApi from "../utils/fetchApi";
-import { useApi } from "../contexts/Apicontext";
+import { useApi } from "../contexts/GlobalContext";
 import Loader from "../components/Loader";
 import DisplayWeather from "../components/DisplayWeather";
+import getCurrentLocationViaGeoLocation from "../utils/geolocation";
 
 function CurrentWeather(){
 
@@ -13,7 +14,7 @@ function CurrentWeather(){
     const [errorMessage,setErrorMessage] = useState<string>("");
     const [openWeatherData,setOpenWeatherData] = useState<OpenWeatherApiResponse|null>(null);
     const [weatherApiData,setWeatherApiData] = useState<WeatherApiResponse|null>(null);
-    const [enteredLocation,setEnteredLocation] = useState<string>("");
+    const [enteredLocation,setEnteredLocation] = useState<string | string[]>("");
     const {selectedApi} = useApi();
 
     useEffect(() => {
@@ -26,7 +27,7 @@ function CurrentWeather(){
         setLoadingState(true);
         try {
             if(selectedApi === "openWeather"){
-                const apiUrl = `${OPEN_WEATHER_API}weather?${typeLocation}&APPID=${OPEN_WEATHER_API_KEY}`
+                const apiUrl = `${OPEN_WEATHER_API}weather?${typeLocation}&units=imperial&APPID=${OPEN_WEATHER_API_KEY}`
                 const data = await fetchApi<OpenWeatherApiResponse>(apiUrl);
                 setOpenWeatherData(data);
             }else if (selectedApi === "weatherApi"){
@@ -38,25 +39,7 @@ function CurrentWeather(){
             
         } catch (error) {
             if(error instanceof ApiError){
-            let errMessage : string;
-            switch(error.code){
-                case 400:
-                case 404:
-                    errMessage = "Invalid City !, Please enter valid city";
-                    break;
-                case 401:
-                    errMessage = "Invalid API key";
-                    break;
-                case 429:
-                    errMessage = "Api fetching quota reached, try after 24 hrs";
-                    break;
-                case 500:
-                    errMessage = "Internal Error!";
-                    break;
-                default:
-                    errMessage = "Something went wrong in weather fetching !";
-                    break;
-            }
+            let errMessage : string = error.message;
             setOpenWeatherData(null);
             setErrorMessage(errMessage);
             }
@@ -65,30 +48,12 @@ function CurrentWeather(){
         }
     }
 
-    
-    function getCurrentLocationViaGeoLocation():Promise<string>{
-        return new Promise((resolve,reject)=>{
-            if(!navigator.geolocation){
-                reject(new Error("Your browser doesn't support navigator !"));
-            }
-            navigator.geolocation.getCurrentPosition((pos)=>{
-                const {latitude,longitude} = pos.coords;
-                const latLong : string = selectedApi === "openWeather" 
-                    ? `lat=${latitude}&lon=${longitude}`
-                    : `q=${latitude},${longitude}`;
-                resolve(latLong);
-            },(err)=>{
-                reject(new Error(err.message));
-            })
-
-        })
-    }
 
     useEffect(()=>{
         const load = async ()=>{
         setLoadingState(true);
         try {
-            const locationQuery = await getCurrentLocationViaGeoLocation();
+            const locationQuery = await getCurrentLocationViaGeoLocation(selectedApi);
             await fetchWeatherData(locationQuery);
         } catch (error) {
                 if (error instanceof Error) {
@@ -127,7 +92,7 @@ return (
         />
 
         <button
-          disabled={!enteredLocation.trim()}
+          disabled={!enteredLocation}
           onClick={() => {
             fetchWeatherData("q=" + enteredLocation);
             setEnteredLocation("");

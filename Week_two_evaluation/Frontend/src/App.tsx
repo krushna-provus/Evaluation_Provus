@@ -1,6 +1,6 @@
 import Home from "./pages/Home"
 import Header from "./components/Header"
-import { ApiProvider } from "./contexts/Apicontext"
+import { ApiProvider } from "./contexts/GlobalContext"
 import { BrowserRouter,Routes,Route } from "react-router-dom";
 import CurrentWeather from "./pages/CurrentWeather";
 import Forecast from "./pages/Forecast";

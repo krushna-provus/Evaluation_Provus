@@ -1,8 +1,21 @@
 import logo from "./../assets/Provus_edited_logo.png";
-import { useApi } from "../contexts/Apicontext";
+import { useApi } from "../contexts/GlobalContext";
+import type { ApiTypes, OptionsForSelect, Units } from "../interfaces/interfaces";
+import Select from "./Select";
+
+
+const apiOptions : OptionsForSelect[] = [
+  {title : "🌤 OpenWeather API",value:"openWeather"},
+  {title : "☁️ WeatherAPI",value:"weatherApi"}
+]
+const unitsOptions : OptionsForSelect[] = [
+  {title : "Imperial",value:"Imperial"},
+  {title : "Standard",value:"Standard"},
+  {title : "Metric",value:"Metric"},
+]
 
 function Header() {
-  const { selectedApi, setSelectedApi } = useApi();
+  const { selectedApi, setSelectedApi,selectedUnit,setSelectedUnit,setPrevSelectedUnit } = useApi();
 
   return (
     <div className="absolute top-6 left-0 w-full flex justify-center z-20">
@@ -29,49 +42,12 @@ function Header() {
           </div>
 
           <div className="flex items-center gap-4">
-            <label
-              htmlFor="api-select"
-              className="text-sky-700 font-semibold text-lg"
-            >
-              Choose API:
-            </label>
-
-            <select
-              id="api-select"
-              value={selectedApi}
-              onChange={(e) =>
-                setSelectedApi(
-                  e.target.value as "openWeather" | "weatherApi" | ""
-                )
-              }
-              className="
-                px-5 py-2.5
-                rounded-xl
-                bg-white/80
-                backdrop-blur-md
-                text-sky-800
-                font-medium
-                shadow-sm
-                border border-sky-200
-                focus:outline-none
-                focus:ring-2 focus:ring-sky-400
-                transition-all duration-300
-                hover:shadow-md
-                cursor-pointer
-              "
-            >
-              <option value="" disabled hidden>
-                -- Select API --
-              </option>
-
-              <option value="openWeather">
-                🌤 OpenWeather API
-              </option>
-
-              <option value="weatherApi">
-                ☁️ WeatherAPI
-              </option>
-            </select>
+            <Select<ApiTypes> selectLabel="Choose API : " selectedValue={selectedApi} setSelectedValue={setSelectedApi}
+              options={apiOptions}
+            />
+            <Select<Units> setPrevValue={setPrevSelectedUnit} selectLabel="Choose Units" selectedValue={selectedUnit} setSelectedValue={setSelectedUnit}
+              options={unitsOptions}
+            />
           </div>
 
         </div>
