@@ -140,7 +140,7 @@ This is a weather dashboard application with a minimal backend and a comprehensi
 
 ---
 
-## 📊 Code Quality Score:  **Score: 6.5/10**
+## 📊 Code Quality Score:  **6.5/10**
 
 ### Breakdown:
 - **Project Structure:** 8/10 - Well organized
