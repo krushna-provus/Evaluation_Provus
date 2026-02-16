@@ -3,8 +3,10 @@ import type { Units } from "../interfaces/interfaces";
 export default function formatValueByUnit(selectedUnit : Units,weatherAttribute: string, val: number, sourceUnit: string): string {
     const weatherAttributeLowerCase = weatherAttribute.toLocaleLowerCase();
     if (weatherAttributeLowerCase === "temperature" || weatherAttributeLowerCase.includes("temp") || weatherAttribute === "Max / Min" || weatherAttribute === "Feels Like") {
-      if (selectedUnit === "Metric" && sourceUnit === "F") {
-        return `${((val - 32) / 1.8).toFixed(1)}°C`;
+      if (selectedUnit === "Metric") {
+        return `${((val - 32) / 1.8).toFixed(2)}°C`;
+      }else if(selectedUnit === "Standard"){
+        return `${(((val - 32) / 1.8)+273.15).toFixed(2)}°K`
       }
       return `${val.toFixed(1)}°F`;
     }

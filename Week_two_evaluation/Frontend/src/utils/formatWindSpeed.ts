@@ -1,8 +1,9 @@
 import type { Units } from "../interfaces/interfaces";
 
 export default function formatWindSpeed(speedMph: number, unit: Units): string {
-  if (unit === "Metric") {
-    return `${(speedMph * 0.44704).toFixed(1)} m/s`;
+  if (unit === "Imperial") {
+      return `${speedMph.toFixed(2)} mph`;
   }
-  return `${speedMph.toFixed(1)} mph`;
+  return `${(speedMph * 0.44704).toFixed(2)} m/s`;
+
 }

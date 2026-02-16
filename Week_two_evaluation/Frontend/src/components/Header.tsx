@@ -11,6 +11,7 @@ const apiOptions : OptionsForSelect[] = [
 const unitsOptions : OptionsForSelect[] = [
   {title : "Imperial",value:"Imperial"},
   {title : "Metric",value:"Metric"},
+  {title : "Standard",value:"Standard"},
 ]
 
 function Header() {
