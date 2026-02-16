@@ -343,7 +343,6 @@ interface WeahterApiForecastCondition {
 export const Units = {
   Imperial: "Imperial",
   Metric: "Metric",
-  Standard : "Standrad"
 } as const;
 
 export type Units = typeof Units[keyof typeof Units];
