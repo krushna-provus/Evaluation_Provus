@@ -1,6 +1,5 @@
 import { useState,createContext,type ReactNode, useContext } from "react";
-import { Units } from "../interfaces/interfaces";
-import type{ ApiTypes } from "../interfaces/interfaces";
+import type { Units,ApiTypes } from "../interfaces/interfaces";
 
 
 
@@ -9,19 +8,16 @@ type ContextType = {
     setSelectedApi : React.Dispatch<React.SetStateAction<ApiTypes>>;
     selectedUnit : Units;
     setSelectedUnit : React.Dispatch<React.SetStateAction<Units>>;
-    prevSelectedUnit : Units;
-    setPrevSelectedUnit : React.Dispatch<React.SetStateAction<Units>>;
 }
 
 const GlobalContext = createContext<ContextType | undefined>(undefined);
 
 export function ApiProvider({children} : {children : ReactNode}){
     const [selectedApi,setSelectedApi] = useState<ApiTypes>("openWeather");
-    const [selectedUnit,setSelectedUnit] = useState<Units>("imperial");
-    const [prevSelectedUnit,setPrevSelectedUnit] = useState<Units>(selectedUnit);
+    const [selectedUnit,setSelectedUnit] = useState<Units>("Imperial");
 
     return (
-        <GlobalContext.Provider value={{selectedApi,setSelectedApi,selectedUnit,setSelectedUnit,setPrevSelectedUnit,prevSelectedUnit}}>
+        <GlobalContext.Provider value={{selectedApi,setSelectedApi,selectedUnit,setSelectedUnit}}>
             {children}
         </GlobalContext.Provider>
     )

@@ -1,5 +1,6 @@
+import type { ApiTypes } from "../interfaces/interfaces";
 
-function getCurrentLocationViaGeoLocation(selectedApi : string):Promise<string>{
+function getCurrentLocationViaGeoLocation(selectedApi : ApiTypes):Promise<string>{
     return new Promise((resolve,reject)=>{
         if(!navigator.geolocation){
             reject(new Error("Your browser doesn't support navigator !"));

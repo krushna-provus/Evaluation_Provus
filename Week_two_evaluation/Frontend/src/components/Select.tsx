@@ -2,7 +2,7 @@ import type { SetStateAction } from "react";
 import type { OptionsForSelect } from "../interfaces/interfaces";
 
 
-function Select<T>({selectLabel,selectedValue,setSelectedValue,options,setPrevValue}:{
+function Select<T>({selectLabel,selectedValue,setSelectedValue,options}:{
     selectLabel : string,
     selectedValue : T;
     setSelectedValue : React.Dispatch<SetStateAction<T>>;
@@ -21,9 +21,6 @@ function Select<T>({selectLabel,selectedValue,setSelectedValue,options,setPrevVa
             id="api-select"
             value={selectedValue as string}
             onChange={(e) =>{
-                if(setPrevValue){
-                    setPrevValue(selectedValue as T);
-                }
                 setSelectedValue(e.target.value as T)}
             }
             className="
@@ -46,8 +43,8 @@ function Select<T>({selectLabel,selectedValue,setSelectedValue,options,setPrevVa
             -- Select --
             </option>
 
-            {options.map((item,idx)=>{
-                return <option key={idx} value={item.value}>
+            {options.map((item)=>{
+                return <option key={item.value} value={item.value}>
             {item.title}
             </option>
             })}

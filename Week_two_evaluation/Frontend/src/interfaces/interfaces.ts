@@ -119,7 +119,7 @@ interface Condition {
 }
 
 
-export interface CardData {attribute : string, value : number,value2?:number};
+export interface CardData {attribute : string, value : number,value2?:number,unit : string};
 
 
 
@@ -341,14 +341,13 @@ interface WeahterApiForecastCondition {
 
 
 export const Units = {
-  Imperial: "imperial",
-  Standard: "standard",
-  Metric: "metric",
+  Imperial: "Imperial",
+  Metric: "Metric",
 } as const;
 
 export type Units = typeof Units[keyof typeof Units];
 
-export type ApiTypes = "" | "openWeather" | "weatherApi";
+export type ApiTypes = "openWeather" | "weatherApi";
 
 export type OptionsForSelect = {
   value : string, title : string

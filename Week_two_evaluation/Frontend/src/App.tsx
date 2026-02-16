@@ -16,7 +16,7 @@ function App() {
           <div className="pt-28">
             <Routes>
               <Route path="/" element={<Home/>}> 
-                <Route path="current" element={<CurrentWeather/>}/>
+                <Route path="/" element={<CurrentWeather/>}/>
                 <Route path="forecast" element={<Forecast/>}/>
               </Route>
             </Routes>

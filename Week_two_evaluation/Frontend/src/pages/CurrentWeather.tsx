@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react";
-import { OPEN_WEATHER_API,OPEN_WEATHER_API_KEY, WEATHERAPI_API_KEY, WEATHERAPI_COM_API } from "../utils/constants";
+import { OPEN_WEATHER_API,WEATHERAPI_COM_API } from "../utils/constants";
 import type { OpenWeatherApiResponse, WeatherApiResponse } from "../interfaces/interfaces";
 import ApiError from "../classes/ApiError";
 import fetchApi from "../utils/fetchApi";
@@ -8,9 +8,12 @@ import Loader from "../components/Loader";
 import DisplayWeather from "../components/DisplayWeather";
 import getCurrentLocationViaGeoLocation from "../utils/geolocation";
 
+const open_weather_api_key = import.meta.env.VITE_OPEN_WEATHER_API_KEY;
+const weatherapi_api_key = import.meta.env.VITE_WEATHERAPI_API_KEY;
+
 function CurrentWeather(){
 
-    const [loadingState,setLoadingState] = useState<boolean>();
+    const [loadingState,setLoadingState] = useState<boolean>(false);
     const [errorMessage,setErrorMessage] = useState<string>("");
     const [openWeatherData,setOpenWeatherData] = useState<OpenWeatherApiResponse|null>(null);
     const [weatherApiData,setWeatherApiData] = useState<WeatherApiResponse|null>(null);
@@ -27,11 +30,11 @@ function CurrentWeather(){
         setLoadingState(true);
         try {
             if(selectedApi === "openWeather"){
-                const apiUrl = `${OPEN_WEATHER_API}weather?${typeLocation}&units=imperial&APPID=${OPEN_WEATHER_API_KEY}`
+                const apiUrl = `${OPEN_WEATHER_API}weather?${typeLocation}&units=imperial&APPID=${open_weather_api_key}`
                 const data = await fetchApi<OpenWeatherApiResponse>(apiUrl);
                 setOpenWeatherData(data);
             }else if (selectedApi === "weatherApi"){
-                const apiUrl = `${WEATHERAPI_COM_API}current.json${WEATHERAPI_API_KEY}${typeLocation}`;
+                const apiUrl = `${WEATHERAPI_COM_API}current.json${weatherapi_api_key}${typeLocation}`;
                 const data = await fetchApi<WeatherApiResponse>(apiUrl);
                 setWeatherApiData(data);
             }
@@ -39,7 +42,7 @@ function CurrentWeather(){
             
         } catch (error) {
             if(error instanceof ApiError){
-            let errMessage : string = error.message;
+            const errMessage : string = error.message;
             setOpenWeatherData(null);
             setErrorMessage(errMessage);
             }
@@ -65,7 +68,10 @@ function CurrentWeather(){
         }
         };
         load();
-    },[])
+    },[selectedApi])
+
+
+
 
 return (
   <div className="px-4 pb-10">
@@ -92,7 +98,8 @@ return (
         />
 
         <button
-          disabled={!enteredLocation}
+          type="submit"
+          disabled={!enteredLocation || typeof enteredLocation !=="string"}
           onClick={() => {
             fetchWeatherData("q=" + enteredLocation);
             setEnteredLocation("");

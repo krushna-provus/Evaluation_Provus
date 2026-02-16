@@ -10,12 +10,11 @@ const apiOptions : OptionsForSelect[] = [
 ]
 const unitsOptions : OptionsForSelect[] = [
   {title : "Imperial",value:"Imperial"},
-  {title : "Standard",value:"Standard"},
   {title : "Metric",value:"Metric"},
 ]
 
 function Header() {
-  const { selectedApi, setSelectedApi,selectedUnit,setSelectedUnit,setPrevSelectedUnit } = useApi();
+  const { selectedApi, setSelectedApi,selectedUnit,setSelectedUnit } = useApi();
 
   return (
     <div className="absolute top-6 left-0 w-full flex justify-center z-20">
@@ -45,7 +44,7 @@ function Header() {
             <Select<ApiTypes> selectLabel="Choose API : " selectedValue={selectedApi} setSelectedValue={setSelectedApi}
               options={apiOptions}
             />
-            <Select<Units> setPrevValue={setPrevSelectedUnit} selectLabel="Choose Units" selectedValue={selectedUnit} setSelectedValue={setSelectedUnit}
+            <Select<Units>  selectLabel="Choose Units" selectedValue={selectedUnit} setSelectedValue={setSelectedUnit}
               options={unitsOptions}
             />
           </div>

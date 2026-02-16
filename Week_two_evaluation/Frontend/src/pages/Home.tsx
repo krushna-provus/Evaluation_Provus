@@ -8,13 +8,12 @@ function Home() {
 
   const homeCardDetails: HomeCardDetails[] = [
     { title: "Current", navigation: "/current" },
-    { title: "Forecast", navigation: "/forecast" },
   ];
 
   return (
     <div className="min-h-[70vh] px-6 py-10">
       
-      {pathname === "/" && (
+      {/* {pathname === "/" && (
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 place-items-center">
             {homeCardDetails.map((item, idx) => (
@@ -27,7 +26,7 @@ function Home() {
           </div>
 
         </div>
-      )}
+      )} */}
 
       <div >
         <Outlet />

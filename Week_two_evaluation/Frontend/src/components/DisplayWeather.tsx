@@ -2,7 +2,6 @@ import type { OpenWeatherApiResponse, WeatherApiResponse, CardData } from "../in
 import { dateAndTimeFormatter } from "../utils/dateFormatter";
 import InnerDisplayCard from "./InnerDisplayCard";
 import { useApi } from "../contexts/GlobalContext";
-import changeDataByUnits from "../utils/changeDataByUnits";
 import { useEffect } from "react";
 
 type DisplayWeatherProps = 
@@ -11,14 +10,14 @@ type DisplayWeatherProps =
 
 function DisplayWeather(props: DisplayWeatherProps) {
   const { apiType, weatherData } = props;
-  const { prevSelectedUnit, selectedUnit } = useApi();
+  const { selectedUnit } = useApi();
 
   const commonData = apiType === "openWeather" 
     ? extractOpenWeatherData(weatherData as OpenWeatherApiResponse)
     : extractWeatherApiData(weatherData as WeatherApiResponse);
 
   useEffect(()=>{
-    console.log(selectedUnit);
+
   },[selectedUnit])
 
   return (
@@ -41,41 +40,17 @@ function DisplayWeather(props: DisplayWeatherProps) {
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-sky-800">
-          {commonData.cards.map((item, idx) => {
-            const needsConversion = item.attribute.toLowerCase().includes("temp") || 
-                                   item.attribute.toLowerCase().includes("feels");
-
-            let item1, item2;
-
-            if (needsConversion) {
-              item1 = changeDataByUnits({
-                prevUnit: prevSelectedUnit,
-                selectedUnit: selectedUnit,
-                dataAttribute: item.attribute,
-                data: item.value
-              });
-
-              item2 = item.value2 ? changeDataByUnits({
-                prevUnit: prevSelectedUnit,
-                selectedUnit: selectedUnit,
-                dataAttribute: item.attribute,
-                data: item.value2
-              }) : undefined;
-            } else {
-              const unit = item.attribute === "Humidity" ? "%" : 
-                          item.attribute === "Pressure" ? "hPa" : "";
-              
-              item1 = { value: item.value, unit: unit };
-              item2 = item.value2 ? { value: item.value2, unit: unit } : undefined;
-            }
-
+          {commonData.cards.map((item) => {
+            
             return (
-              <InnerDisplayCard 
-                key={idx} 
-                weatherAttribute={item.attribute} 
-                item1={item1}
-                item2={item2}
-              />
+            <InnerDisplayCard 
+              key={item.attribute} 
+              weatherAttribute={item.attribute} 
+              item1={{ value: item.value, unit: item.unit }}
+              {...(item.value2 !== undefined && {
+                item2: { value: item.value2, unit: item.unit }
+              })}
+            />
             );
           })}
         </div>
@@ -83,15 +58,7 @@ function DisplayWeather(props: DisplayWeatherProps) {
         <div className="bg-cyan-100 rounded-xl p-4 text-center shadow-sm">
           <p className="text-sm text-gray-500">Wind</p>
           <p className="text-lg font-semibold text-sky-700">
-            {(() => {
-              const windConverted = changeDataByUnits({
-                prevUnit: prevSelectedUnit,
-                selectedUnit: selectedUnit,
-                dataAttribute: "wind",
-                data: commonData.windSpeed
-              });
-              return `🌬 ${windConverted.value.toFixed(1)} ${windConverted.unit} | ${commonData.windDegree}°`;
-            })()}
+            {formatWindSpeed(commonData.windSpeed, selectedUnit)} {commonData.windDegree}°
           </p>
         </div>
 
@@ -114,6 +81,13 @@ function DisplayWeather(props: DisplayWeatherProps) {
   );
 }
 
+function formatWindSpeed(speedMph: number, unit: string): string {
+  if (unit === "Metric") {
+    return `${(speedMph * 1.60934).toFixed(1)} km/h`;
+  }
+  return `${speedMph.toFixed(1)} mph`;
+}
+
 function extractOpenWeatherData(data: OpenWeatherApiResponse) {
   const { coord, dt, main, name, sys, weather, wind } = data;
   const { main: weatherMain, description } = weather[0];
@@ -125,10 +99,10 @@ function extractOpenWeatherData(data: OpenWeatherApiResponse) {
     lon: coord.lon,
     weatherDescription: `${weatherMain} - ${description}`,
     cards: [
-      { attribute: "Temperature", value: main.temp },
-      { attribute: "Humidity", value: main.humidity },
-      { attribute: "Pressure", value: main.pressure },
-      { attribute: "Max / Min", value: main.temp_max, value2: main.temp_min },
+      { attribute: "Temperature", value: main.temp, unit : "F" },
+      { attribute: "Humidity", value: main.humidity, unit : "%" },
+      { attribute: "Pressure", value: main.pressure, unit : "mb" },
+      { attribute: "Max / Min", value: main.temp_max, value2: main.temp_min, unit: "F" },
     ] as CardData[],
     windSpeed: wind.speed,
     windDegree: wind.deg,
@@ -149,10 +123,10 @@ function extractWeatherApiData(data: WeatherApiResponse) {
     lon: location.lon,
     weatherDescription: current.condition.text,
     cards: [
-      { attribute: "Temperature", value: current.temp_f },
-      { attribute: "Feels Like", value: current.feelslike_f },
-      { attribute: "Humidity", value: current.humidity },
-      { attribute: "Pressure", value: current.pressure_mb },
+      { attribute: "Temperature", value: current.temp_f,unit : "F" },
+      { attribute: "Feels Like", value: current.feelslike_f, unit : "F" },
+      { attribute: "Humidity", value: current.humidity, unit : "%" },
+      { attribute: "Pressure", value: current.pressure_mb, unit : "mb" },
     ] as CardData[],
     windSpeed: current.wind_mph,
     windDegree: current.wind_degree,

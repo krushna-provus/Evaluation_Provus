@@ -5,7 +5,7 @@ function HomeCards({ title, navigation }: { title: string; navigation: string })
 
   return (
     <div className="flex justify-center">
-      <div
+      <button
         onClick={() => {
           navigate(navigation);
         }}
@@ -30,7 +30,7 @@ function HomeCards({ title, navigation }: { title: string; navigation: string })
         "
       >
         {title}
-      </div>
+      </button>
     </div>
   );
 }
