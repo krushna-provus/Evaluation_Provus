@@ -1,4 +1,4 @@
-import { useApi } from "../contexts/GlobalContext";
+import { useApi } from "../hooks/useApi";
 
 function InnerDisplayCard({
   weatherAttribute,
@@ -11,9 +11,9 @@ function InnerDisplayCard({
 }) {
   const { selectedUnit } = useApi();
 
-  function formatValue(attr: string, val: number, sourceUnit: string): string {
-    const attrLower = attr.toLowerCase();
-    if (attrLower === "temperature" || attrLower.includes("temp") || attr === "Max / Min" || attr === "Feels Like") {
+  function formatValue(weatherAttribute: string, val: number, sourceUnit: string): string {
+    const weatherAttributeLowerCase = weatherAttribute.toLocaleLowerCase();
+    if (weatherAttributeLowerCase === "temperature" || weatherAttributeLowerCase.includes("temp") || weatherAttribute === "Max / Min" || weatherAttribute === "Feels Like") {
       if (selectedUnit === "Metric" && sourceUnit === "F") {
         return `${((val - 32) / 1.8).toFixed(1)}°C`;
       }

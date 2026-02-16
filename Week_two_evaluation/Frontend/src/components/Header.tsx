@@ -1,5 +1,5 @@
 import logo from "./../assets/Provus_edited_logo.png";
-import { useApi } from "../contexts/GlobalContext";
+import { useApi } from "../hooks/useApi";
 import type { ApiTypes, OptionsForSelect, Units } from "../interfaces/interfaces";
 import Select from "./Select";
 

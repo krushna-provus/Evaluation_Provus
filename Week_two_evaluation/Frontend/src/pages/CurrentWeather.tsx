@@ -1,9 +1,9 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect, useCallback } from "react";
 import { OPEN_WEATHER_API,WEATHERAPI_COM_API } from "../utils/constants";
 import type { OpenWeatherApiResponse, WeatherApiResponse } from "../interfaces/interfaces";
 import ApiError from "../classes/ApiError";
 import fetchApi from "../utils/fetchApi";
-import { useApi } from "../contexts/GlobalContext";
+import { useApi } from "../hooks/useApi";
 import Loader from "../components/Loader";
 import DisplayWeather from "../components/DisplayWeather";
 import getCurrentLocationViaGeoLocation from "../utils/geolocation";
@@ -26,7 +26,7 @@ function CurrentWeather(){
       setErrorMessage("");
     }, [selectedApi]);
 
-    const fetchWeatherData :(loc : string)=> Promise<void> = async (typeLocation : string)=>{
+    const fetchWeatherData :(loc : string)=> Promise<void> = useCallback(async (typeLocation : string)=>{
         setLoadingState(true);
         try {
             if(selectedApi === "openWeather"){
@@ -49,7 +49,7 @@ function CurrentWeather(){
         } finally{
             setLoadingState(false);
         }
-    }
+    },[selectedApi])
 
 
     useEffect(()=>{
@@ -68,7 +68,7 @@ function CurrentWeather(){
         }
         };
         load();
-    },[selectedApi])
+    },[selectedApi,fetchWeatherData])
 
 
 
